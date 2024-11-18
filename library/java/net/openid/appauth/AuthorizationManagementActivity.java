@@ -355,7 +355,17 @@ public class AuthorizationManagementActivity extends AppCompatActivity {
                         response.getState(),
                         mAuthRequest.getState());
 
-                return AuthorizationRequestErrors.STATE_MISMATCH.toIntent();
+                // Create an exception based on STATE_MISMATCH & pass response json as error message
+                AuthorizationException stateMismatchEx = AuthorizationRequestErrors.STATE_MISMATCH;
+                AuthorizationException exception = new AuthorizationException(
+                        stateMismatchEx.type,
+                        stateMismatchEx.code,
+                        stateMismatchEx.errorDescription,
+                        response.jsonSerializeString(),
+                        null,
+                        null);
+
+                return exception.toIntent();
             }
 
             return response.toIntent();
